@@ -2,9 +2,9 @@
 
 # Docker for Mac/Windows
 
-​	开发环境中有时候想把 Docker 容器实例当做正常的虚拟机来用，换句话说就是本机和Docker容器实例处于同一个子网中，本机可以直接通过IP地址访问Docker容器实例，而不是通过中间端口映射的方式来访问！
+&emsp;&emsp;开发环境中有时候想把 Docker 容器实例当做正常的虚拟机来用，换句话说就是本机和Docker容器实例处于同一个子网中，本机可以直接通过IP地址访问Docker容器实例，而不是通过中间端口映射的方式来访问！
 
-​	Mac和Windows操作系统都无法直接支持Docker，都是通过安装虚拟机的方式来支持Docker功能， Docker Toolbox同时支持Mac和Windows操作系统，实际上Docker Toolbox在本机的作用是安装一套对应的Docker命令可以间接访问虚拟机中真正的Docker宿主机。
+&emsp;&emsp;Mac和Windows操作系统都无法直接支持Docker，都是通过安装虚拟机的方式来支持Docker功能，Docker Toolbox同时支持Mac和Windows操作系统，实际上Docker Toolbox在本机的作用是安装一套对应的Docker命令可以间接访问虚拟机中真正的Docker宿主机。
 
 > 在Mac下使用 Docker 可以选择 Docker Toolbox 或 Docker for Mac，Docker for Mac 是 Docker Toolbox 的替代品，但是 Docker for Mac 对网络连通性的支持比较有限，因此目前还是用Docker Toolbox。
 
@@ -50,7 +50,13 @@
 
 **解决方案**：
 
-> Docker为了安全原因会让Docker容器实例处于不同网段，既然因为是处于不同网段造成的网络不通，那么修改`vboxnet1`的IP地址，让它和docker虚拟机处于同一个网段即可。
+> Docker为了安全原因会让Docker容器实例处于不同网段，既然因为是处于不同网段造成的网络不通，那么创建一个新的Docker网络，让它和docker虚拟机处于同一个网段即可。
+>
+> 当然也可以修改`vboxnet1`的IP地址使它和 docker0 处于同一网段，但是这种方式不能给容器指定静态IP地址。
+>
+> ``````
+> docker: Error response from daemon: user specified IP address is supported on user defined networks only.
+> ``````
 
 
 
@@ -62,7 +68,7 @@ Docker VM：
 
 ## 目标
 
-​	本文以Mac为例，Windows上的操作也类似，因为要安装DNS服务器等其他服务，`boot2docker`可能不太够用，另外服务器上最常用的操作系统是`Centos`，因此打算把`Docker VM` 也换成 `Centos7`，这样本机还可以同时有一个Centos环境。
+&emsp;&emsp;本文以Mac为例，Windows上的操作也类似，因为要安装DNS服务器等其他服务，`boot2docker`可能不太够用，另外服务器上最常用的操作系统是`Centos`，因此打算把`Docker VM` 也换成 `Centos7`，这样本机还可以同时有一个Centos环境。
 
 **最终效果**：
 
@@ -74,18 +80,19 @@ Docker VM：
 
 最终的混杂网络配置如下：
 
-| Host               | IP Address   |
-| ------------------ | ------------ |
-| MacBook            | 172.17.0.253 |
-| docker(VirtualBox) | 172.17.0.1   |
-| c1                 | 172.17.0.2   |
-| c2                 | 172.17.0.3   |
+| Host               | IP Address     |
+| ------------------ | -------------- |
+| MacBook            | 192.168.33.253 |
+| docker(VirtualBox) | 192.168.33.1   |
+| c1                 | 192.168.33.2   |
+| c2                 | 192.168.33.3   |
 
 说明
 
-- 172.17.0.253 是 VirtualBox 在 Mac 上绑定的虚拟网卡`vboxnet1`的新地址
+- 192.168.33.253 是 VirtualBox 在 Mac 上绑定的虚拟网卡`vboxnet1`的新地址
 
-  为什么用`172.17.0.253`，因为采用网桥（Bridge）模式后，所有的容器实例没有指定IP地址的时候是从最小IP开始分配的，并且分配的时候并不知道某个IP地址已经被外面的`vboxnet1`用了，为了避免容器自动分配的IP地址和外面的`vboxnet1`的IP地址冲突，因此尽可能的给`vboxnet1`设置比较大的IP地址
+  为什么用`192.168.33.253`，因为采用网桥（Bridge）模式后，所有的容器实例没有指定IP地址的时候是从最小IP开始分配的，并且分配的时候并不知道某个IP地址已经被外面的`vboxnet1`用了，为了避免容器自动分配的IP地址和外面的`vboxnet1`的IP地址冲突，因此尽可能的给`vboxnet1`设置比较大的IP地址
+
 
 
 
@@ -104,14 +111,14 @@ Docker VM：
 ## 更改`vboxnet1` IP address
 
 ```bash
-$ VBoxManage hostonlyif ipconfig vboxnet1 --ip 172.17.0.253 --netmask 255.255.0.0
+$ VBoxManage hostonlyif ipconfig vboxnet1 --ip 192.168.33.253 --netmask 255.255.255.0
 ```
 
 `````bash
 $ ifconfig
 vboxnet1: flags=8943<UP,BROADCAST,RUNNING,PROMISC,SIMPLEX,MULTICAST> mtu 1500
 	ether 0a:00:27:00:00:01
-	inet 172.17.0.253 netmask 0xffff0000 broadcast 172.17.255.255
+	inet 192.168.33.253 netmask 0xffffff00 broadcast 192.168.33.255
 `````
 
 
@@ -128,7 +135,7 @@ $ vi Vagrantfile
 Vagrant.configure(2) do |config|
   config.vm.box = "dolbager/centos-7-docker"
   config.vm.hostname = "default"
-  config.vm.network "private_network", ip: "172.17.0.1", netmask: "255.255.0.0"
+  config.vm.network "private_network", ip: "192.168.33.1", netmask: "255.255.255.0"
 
   config.vm.provider "virtualbox" do |v|
     v.name = "default"
@@ -160,7 +167,7 @@ end
 
 - private_network: 
 
-  Docker VM 主机的IP=172.17.0.1
+  Docker VM 主机的IP=192.168.33.1
 
 - v.memory
 
@@ -169,6 +176,7 @@ end
 - bridge-utils
 
   创建网桥需要的辅助工具
+
 
 
 
@@ -220,7 +228,7 @@ $ docker-machine rm default
 # Setup the VM as your Docker machine
 $ docker-machine create \
  --driver "generic" \
- --generic-ip-address 172.17.0.1 \
+ --generic-ip-address 192.168.33.1 \
  --generic-ssh-user vagrant \
  --generic-ssh-key .vagrant/machines/default/virtualbox/private_key \
  --generic-ssh-port 22 \
@@ -258,7 +266,7 @@ To see how to connect your Docker Client to the Docker Engine running on this vi
 
 
 
-## 修改虚拟机网桥配置
+## 创建网桥`docker1` 和 docker network `br`
 
 通过` vagrant` 从虚拟机的 `eth0` 登录到虚拟机
 
@@ -276,9 +284,9 @@ Last login: Fri Dec  8 20:04:34 2017 from 10.0.2.2
        valid_lft forever preferred_lft forever
 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN qlen 1000
     inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic eth0
-       valid_lft 85763sec preferred_lft 85763sec
+       valid_lft 84972sec preferred_lft 84972sec
 3: eth1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN qlen 1000
-    inet 172.17.0.1/24 brd 172.17.0.255 scope global eth1
+    inet 192.168.33.1/24 brd 192.168.33.255 scope global eth1
        valid_lft forever preferred_lft forever
 4: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN
     inet 172.17.0.1/16 scope global docker0
@@ -289,18 +297,30 @@ Last login: Fri Dec  8 20:04:34 2017 from 10.0.2.2
 
 - Docker 在虚拟机内创建了网桥`docker0`
 - 网桥`docker0`地址范围为`172.17.0.1/16`
-- 网卡`eth1`的IP地址为`172.17.0.1`
+- 网卡`eth1`的IP地址为`192.168.33.1/24`
 
-我们接下来要做的就是将虚拟机的`eth1`绑定到网桥`docker0`上，并且让它变成虚拟机重启也有效。
+我们接下来要做的是在虚拟机中创建一个新的网桥 `docker1` ，并将虚拟机的`eth1`绑定到网桥`docker0`上，并且让这些配置在虚拟机重启也有效。
 
-创建网桥配置文件`docker0`
+创建 docker network `br`
+
+``````
+# Create network "br" with a bridge name "docker1"
+[vagrant@default ~]$ sudo docker network create \
+    --driver bridge \
+    --subnet=192.168.33.0/24 \
+    --gateway=192.168.33.1 \
+    --opt "com.docker.network.bridge.name"="docker1" \
+    br
+``````
+
+创建网桥配置文件`docker1`
 
 ```bash
-[vagrant@default ~]$ sudo vi /etc/sysconfig/network-scripts/ifcfg-docker0
+[vagrant@default ~]$ sudo vi /etc/sysconfig/network-scripts/ifcfg-docker1
 ```
 
 ```
-DEVICE=docker0
+DEVICE=docker1
 TYPE=Bridge
 BOOTPROTO=static
 ONBOOT=yes
@@ -326,7 +346,7 @@ HWADDR=
 ONBOOT=yes
 NETMASK=
 GATEWAY=
-BRIDGE=docker0
+BRIDGE=docker1
 TYPE=Ethernet
 ```
 
@@ -352,25 +372,34 @@ Last login: Fri Dec  8 20:04:34 2017 from 10.0.2.2
        valid_lft forever preferred_lft forever
 2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UNKNOWN qlen 1000
     inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic eth0
-       valid_lft 86374sec preferred_lft 86374sec
-4: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN qlen 1000
+       valid_lft 86106sec preferred_lft 86106sec
+4: docker1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP qlen 1000
+    inet 192.168.33.1/24 scope global docker1
+       valid_lft forever preferred_lft forever
+5: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN
     inet 172.17.0.1/16 scope global docker0
        valid_lft forever preferred_lft forever
 ```
 
 我们可以看到已经起作用了。
 
+然后退出虚拟机，在Mac主机里设置一下环境变量:
+
+```bash
+$ eval $(docker-machine env default) # Setup the environment
+```
+
+我们就可以测试是否一切正常了。
+
 
 
 ## 运行Docker容器实例
 
-退出虚拟机后我们就可以测试是否一切正常了。
-
-不指定IP启动容器，IP 将从`172.17.0.2`开始逐个递增:
+不指定IP启动容器，IP 将从`192.168.33.2`开始逐个递增:
 
 ```bash
-$ docker run -d --net=bridge --name=c1 nginx
-$ docker run -d --net=bridge --name=c2 nginx
+$ docker run -d --net=br --name=c1 nginx
+$ docker run -d --net=br --name=c2 nginx
 ```
 
 通过可以`docker network inspect`命令查看给容器分配的IP地址
@@ -385,38 +414,39 @@ $ docker network inspect bridge
                 "Name": "c2",
                 "EndpointID": "b7c1cf0c0169bac07f8dba37152b0ac3515117655e35a948638a59c9e8ddf841",
                 "MacAddress": "02:42:ac:11:00:03",
-                "IPv4Address": "172.17.0.3/16",
+                "IPv4Address": "192.168.33.3/16",
                 "IPv6Address": ""
             },
             "c95ce3c20b8fd96f1fbef513c60f3b2c0d5547f9a325a741cdffda51bf24d048": {
                 "Name": "c1",
                 "EndpointID": "e6db861d48f1ec20945af9dcbac6438cbc2c4c3dcdf59cac6c6e74664b6456ce",
                 "MacAddress": "02:42:ac:11:00:02",
-                "IPv4Address": "172.17.0.2/16",
+                "IPv4Address": "192.168.33.2/16",
                 "IPv6Address": ""
             }
         },
 ``````
 
-当然你也可以指定IP
+都让，你也可以直接指定静态IP地址
 
 ``````bash
-$ docker run -d --net=bridge --name=c1 --ip=172.17.0.2 nginx
-$ docker run -d --net=bridge --name=c2 --ip=172.17.0.3 nginx
+$ docker run -d --net=br --name=c6 --ip=192.168.33.6 nginx
 ``````
 
 然后你应该可以在Mac中直接通过IP访问这些容器实例了:
 
 ```bash
-$ ping -c 3 172.17.0.2
-$ ping -c 3 172.17.0.3
+$ ping -c 3 192.168.33.2
+$ ping -c 3 192.168.33.3
+$ ping -c 3 192.168.33.6
 ```
 
-也可以通过浏览器来确认是否可以访问
+也可以通过浏览器来确认是否可以访问（第一次访问会稍微需要等一会）
 
 ``````
-http://172.17.0.2
-http://172.17.0.3
+http://192.168.33.2
+http://192.168.33.3
+http://192.168.33.6
 ``````
 
 
@@ -428,15 +458,15 @@ http://172.17.0.3
 ### 方法一：临时增加IP映射
 
 ```bash
-$ docker run -it --net=br --add-host foo:10.0.0.3 --name c3 busybox cat /etc/hosts
+$ docker run -it --net=br --add-host zk:192.168.33.2 --name c4 -h c4 busybox cat /etc/hosts
 127.0.0.1	localhost
 ::1	localhost ip6-localhost ip6-loopback
 fe00::0	ip6-localnet
 ff00::0	ip6-mcastprefix
 ff02::1	ip6-allnodes
 ff02::2	ip6-allrouters
-10.0.0.3	foo
-192.168.33.3	f06e3c61830b
+192.168.33.2	zk
+192.168.33.3	c4
 ```
 
 ###方法二：指定DNS服务器
@@ -467,7 +497,7 @@ Last login: Fri Dec  8 20:04:34 2017 from 10.0.2.2
 ``````
 
 ``````
-172.17.0.2    zk
+192.168.33.2    zk
 ``````
 
 修改Docker的启动配置，指定DNS服务器，顺便加上`registry-mirrors`
@@ -478,7 +508,7 @@ Last login: Fri Dec  8 20:04:34 2017 from 10.0.2.2
 
 ```
 {
-  "dns" : ["172.17.0.1"],
+  "dns" : ["192.168.33.1"],
   "registry-mirrors" : ["https://fnfrb3qa.mirror.aliyuncs.com"]
 }
 ```
@@ -496,13 +526,15 @@ Last login: Fri Dec  8 20:04:34 2017 from 10.0.2.2
 确认DNS是否工作正常
 
 ``````bash
-$ docker run -d --net=bridge --name c4 busybox top
-$ docker exec c4 ping -c 3 zk
-PING zk (172.17.0.2): 56 data bytes
-64 bytes from 172.17.0.2: seq=0 ttl=64 time=0.018 ms
-64 bytes from 172.17.0.2: seq=1 ttl=64 time=0.042 ms
-64 bytes from 172.17.0.2: seq=2 ttl=64 time=0.042 ms
+$ docker run -d --net=br --name c5 busybox top
+$ docker exec c5 ping -c 3 zk
+PING zk (192.168.33.2): 56 data bytes
+64 bytes from 192.168.33.2: seq=0 ttl=64 time=0.018 ms
+64 bytes from 192.168.33.2: seq=1 ttl=64 time=0.042 ms
+64 bytes from 192.168.33.2: seq=2 ttl=64 time=0.042 ms
 ``````
+
+
 
 ## Done
 
