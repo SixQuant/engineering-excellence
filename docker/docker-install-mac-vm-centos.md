@@ -309,7 +309,10 @@ Last login: Fri Dec  8 20:04:34 2017 from 10.0.2.2
     --driver bridge \
     --subnet=192.168.33.0/24 \
     --gateway=192.168.33.1 \
+    --opt "com.docker.network.bridge.enable_icc"="true" \
+    --opt "com.docker.network.bridge.enable_ip_masquerade"="true" \
     --opt "com.docker.network.bridge.name"="docker1" \
+    --opt "com.docker.network.driver.mtu"="1500" \
     br
 ``````
 
@@ -469,7 +472,7 @@ ff02::2	ip6-allrouters
 192.168.33.3	c4
 ```
 
-### 方法二：指定DNS服务器
+###方法二：指定DNS服务器
 
 我采用方法二：给虚拟机安装DNS服务器`dnsmasq`，并且让所有容器实例缺省指向这个DNS服务器。
 
@@ -546,3 +549,19 @@ Vargrant前面下载了虚拟机镜像文件，如果将来不再需要了闲它
 $ vagrant box list
 $ vagrant box remove dolbager/centos-7-docker
 ``````
+
+
+## 后记
+
+注意：Docker 好像有个Bug，如果你在自定义网络的Docker容器中启动阶段访问另外一个容器实例，则可能不通。换句话说就是自定义网络启动需要一点时间（大概40秒），需要等dmesg中出现下列消息的时候才能正常访问Bridge中的其他容器实例
+
+```
+[ 1077.847733] docker1: topology change detected, propagating
+```
+
+解决：可以用类似下面的脚本检测服务是否就绪
+
+``````bash
+until nc -z zk 2181; do echo "waiting for zk to be ready"; sleep 0.5; done
+``````
+
