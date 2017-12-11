@@ -1,5 +1,3 @@
-
-
 # Docker Issue Network Delay
 
 在用自定义Docker网络跑容器的时候发现一个问题：`Docker的自定义网络启动会延迟大概40秒！`
