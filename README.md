@@ -11,8 +11,8 @@
 
 ## Spring Cloud 
 
-- [Spring Cloud Conclusion](spring cloud/Spring Cloud Conclusion.md)<br>
+- [Spring Cloud Conclusion](spring-cloud/spring-cloud-conclusion.md)<br>
   Spring Cloud 学习总结。
-- [Spring Cloud Consul](spring cloud/Spring Cloud  Consul.md)<br>
+- [Spring Cloud Consul](spring-cloud/spring-cloud-consul.md)<br>
   用 Consul 来作为微服务注册中心的 Spring Cloud  实验。
 
