@@ -132,6 +132,7 @@ $ create-react-app my-app
 ```bash
 $ yarn create react-app my-app
 $ cd my-app
+$ yarn install
 $ yarn start
 ```
 
@@ -579,6 +580,7 @@ React-Redux 将所有组件分成两大类：
 ```bash
 $ yarn create react-app react-redux-async
 $ cd react-redux-async
+$ yarn install
 ```
 
 删除 src 目录下的所有文件
