@@ -10,9 +10,9 @@
 
 # React Redux Quick Start
 
-&emsp;&emsp;React 起源于 Facebook 的内部项目，因为该公司对市场上所有 JavaScript MVC 框架，都不满意，就决定自己写一套，用来架设 [Instagram](https://instagram.com/) 的网站。做出来以后，发现这套东西很好用，就在2013年5月[开源](http://facebook.github.io/react/blog/2013/06/05/why-react.html)了，2014年 Facebook 提出了 Flux 架构的概念，2015年 Redux 出现，Redux 由 Flux 演变而来，将 Flux 与函数式编程结合一起。Redux 用来进行状态管理，即你需要一种机制，可以在同一个地方查询状态、改变状态、传播状态的变化。
+&emsp;&emsp;React 起源于 Facebook 的内部项目，因为该公司对市场上所有 JavaScript MVC 框架，都不满意，就决定自己写一套，用来架设 [Instagram](https://instagram.com/) 的网站。做出来以后，发现这套东西很好用，就在2013年5月[开源](http://facebook.github.io/react/blog/2013/06/05/why-react.html)了，2014年 Facebook 提出了`Flux` 架构的概念，2015年 `Redux` 出现，`Redux` 由 `Flux` 演变而来，将 `Flux` 与函数式编程结合一起。`Redux` 用来进行状态（数据）管理，即你需要一种机制，可以在同一个地方查询状态、改变状态、传播状态的变化。
 
-&emsp;&emsp;我们一般说的 React 是指用来写复杂单页应用程序（Single-Page-Application，SPA）的 React 全家桶，React 核心只是一个用来构造界面的UI库，如果要搭建大型或复杂的应用程序，必须搭配一系列的框架或叫中间件。
+&emsp;&emsp;我们一般说的 React 是指用来写复杂的前端单页应用程序（Single-Page-Application，SPA）的 React 全家桶，React 核心只是一个用来构造界面的UI库，如果要搭建大型或复杂的应用程序，必须搭配一系列的相关框架或叫中间件。
 
 常用的中间件：
 
@@ -25,31 +25,31 @@
 
 # 基础：
 
-* 编程环境
-  * JavaScript XML（JSX）：React 使用JSX来编写，需要Babel把JSX转化成JS
-  * JavaScript ES6：新的 JS 语法规范
-  * Babel：JS 代码编译器
-  * Node.js：JS 运行环境
-  * Yarn：JS 包管理器
-  * WebPack：文件打包工具
-* React 组件
-  * 虚拟DOM：DOM diff，即虚拟 DOM 变化全部合并后有变化的才会反应到真实 DOM 上
-  * this.props：属性，不变的数据
-  * this.state：状态，变化的数据
-* 状态管理
-  * Flux：被 Redux 取代
-  * Redux：取代 Flux， Store、Action、Reducer
-  * React-Redux：专为 React 写的 Redux 库
-* 异步操作
-  * Redux-thunk
-  * Redux-saga
+* **编程环境**
+  * **JavaScript XML（JSX）**：React 使用JSX来编写，需要`Babel`把JSX转化成JS
+  * **JavaScript ES6**：新的 JS 语法规范
+  * **Babel**：JS 代码编译器
+  * **Node.js**：JS 运行环境
+  * **Yarn**：Node.js 的 包管理器，比 npm 更好用
+  * **WebPack**：文件打包工具
+* **React 组件**
+  * **虚拟DOM**：DOM diff，即虚拟 DOM 变化全部合并后有变化的才会反应到真实 DOM 上
+  * **this.props**：属性，不变的数据
+  * **this.state**：状态，变化的数据
+* **状态管理**
+  * **Flux**：被 Redux 取代
+  * **Redux**：取代 Flux， Store、Action、Reducer
+  * **React-Redux**：专为 React 写的 Redux 库
+* **异步操作**
+  * **Redux-thunk**
+  * **Redux-saga**
 
-- 路由管理
-  - React-Router：
+- **路由管理**
+  - **React-Router**：
 
 ## 编程环境
 
-&emsp;&emsp;React 使用`JavaScript XML（JSX）`来编写，JSX 是JS的扩展，可以混杂 HTML 和 JS 代码在一起写，为了书写方便等原因大多数都是`JavaScript ES6`标准来写 JS 代码，但是浏览器可能不兼容 ES6 标准而只兼容 ES5 标准，因此需要 `Babel` 这个 JS  编译器来将 ES6 的代码编译为 ES5 的代码。
+&emsp;&emsp;React 使用`JavaScript XML（JSX）`来编写，JSX 是 JS 的扩展，可以混杂 HTML 和 JS 代码在一起写，为了书写方便等原因大多数都是`JavaScript ES6`标准来写 JS 代码，但是浏览器可能不兼容 ES6 标准而只兼容 ES5 标准，因此需要 `Babel` 这个 JS  编译器来将 ES6 的代码编译为 ES5 的代码， `Babel` 同时也负责将 JSX 翻译为 JS。
 
 ```jsx
 ReactDOM.render(
@@ -66,7 +66,7 @@ ReactDOM.render(
 > * 可以直接写 HTML 标签
 > * 大括号里的内容表示是 JS 代码
 
-&emsp;&emsp;一般来说为都是会在服务器端对 jsx 代码进行编译打包后生成单个的 js 文件供浏览器端加载，顺便说下不建议使用 jsx 扩展名请仍旧使用 js 扩展名，这里的编译工具就是 `babel`，它用来翻译 ES6 标准的 jsx 代码变成 ES5 的 js 代码，`webpack`则用来对多个文件进行打包后生成单个文件，`node.js`是服务端 js 的运行环境，`yarn` 则是代替 `npm` 的更好的 `node.js` 包管理工具，用来下载`react`、 `babel`、`webpack` 等所有我们需要用到的代码包。
+&emsp;&emsp;一般来说都是会在服务器端对 jsx 代码进行编译打包后生成单个的 js 文件供浏览器端加载，顺便说下不建议使用 jsx 扩展名请仍旧使用 js 扩展名，这里的编译工具就是 `babel`，`webpack`则用来对多个文件进行打包后生成单个文件，`node.js`是服务端 js 的运行环境，`yarn` 则是代替 `npm` 的更好的 `node.js` 包管理工具，用来下载`react`、 `babel`、`webpack` 等所有我们需要用到的代码包。
 
 **基本环境设置**：
 
@@ -96,31 +96,31 @@ $ yarn -v
 
 ### create-react-app
 
-> create-react-app 来自于 Facebook，通过该命令我们无需配置就能快速构建 React 开发环境。
+> create-react-app 来自于 Facebook，通过该命令我们无需配置就能快速构建 React 开发项目。
 >
 > create-react-app 自动创建的项目基于 Webpack + ES6 。
 
-使用 `create-react-app` 可以快速构建 React 开发环境
+安装 `create-react-app` 
 
 ```bash
 $ yarn global add create-react-app
 ```
 
-之后我们就可以通过 create-react-app 来快速创建 react 环境
+之后我们就可以通过 create-react-app 来快速创建 react 项目
 
 ```bash
 $ create-react-app my-app
 ```
 
-你也可以使用`yarn create react-app`命令
+你也可以使用`yarn create react-app`命令，建议使用。
 
 ```bash
 $ yarn create react-app my-app
 ```
 
-> 会安装或更新 create-react-app 到最新版本，然后调用 create-react-app
+> 这个命令会安装或更新 create-react-app 到最新版本，然后调用 create-react-app
 
-等价于
+上面的命令等价于
 
 ```bash
 $ yarn global add create-react-app
@@ -138,11 +138,12 @@ $ yarn start
 
 > 会自动打开浏览器访问 http://localhost:3000/ 来展示 React 效果
 >
-> 支持热部署，即你修改文件内容后无需重启
+
+这个启动的Web服务是支持热部署的，即你修改文件内容后无需重启即会自动刷新！
 
 ###JavaScript ES6
 
-&emsp;&emsp;开始之前需要了解一些`JavaScript ES6`的基本语法，因为 react 项目基本上都是用ES6来写的，历时将近6年的时间来制定的新 ECMAScript 标准 ECMAScript 6（亦称 ECMAScript Harmony，简称 ES6）终于在 2015 年 6 月正式发布。自从上一个标准版本 ES5 在 2009 年发布以后，ES6 就一直以**新语法**、**新特性**的优越性吸引著众多 JavaScript 开发者，驱使他们积极尝鲜。由于ES6是在2015年发布的，所以也叫ES2015。
+&emsp;&emsp;开始 React 编码之前需要了解一些`JavaScript ES6`的基本语法，因为 React 项目基本上都是用ES6来写的，历时将近6年的时间来制定的新 ECMAScript 标准 `ECMAScript 6`（亦称 ECMAScript Harmony，简称 ES6）终于在 2015 年 6 月正式发布。自从上一个标准版本 ES5 在 2009 年发布以后，ES6 就一直以**新语法**、**新特性**的优越性吸引著众多 JavaScript 开发者，驱使他们积极尝鲜。由于ES6是在2015年发布的，所以也叫`ES2015`。
 
 > 《ECMAScript 6入门》是一本开源的 JavaScript 语言教程，全面介绍 ECMAScript 6 新增的语法特性。<http://es6.ruanyifeng.com/>
 
@@ -349,6 +350,16 @@ const attrs = {
 
 ## React 组件
 
+&emsp;&emsp;`React 组件（Component）`是混杂了HTML和JS控制代码的界面部件，即主体部分看起来像HTML但是中间又混杂了JS代码，你可以插入普通 HTML 标签一样，在网页中插入这个组件。当这个组件被渲染（Render）时即会被翻译为相应的浏览器的DOM对象从而体现在界面上，当数据出现变化后这个渲染（Render）过程会被自动重新执行，得益于React 的**虚拟DOM** 和 **DOM diff** 算法，即虚拟 DOM 变化全部合并后有变化的才会反应到真实 DOM 上，从而得到较好的性能和用户体验。
+
+> 换句话说就是：主体部分（Render）相当于写JSP代码来控制界面输出
+
+混杂了HTML和JS代码
+
+* 可以直接写 HTML 代码
+* 用大括号表示是 JS 代码
+* JS 代码里也可以直接写 HTML 代码
+
 ### HelloWorld
 
 > 一个最简单的 React 组件，直接在浏览器中打开即可查看效果
@@ -372,14 +383,14 @@ helloworld.html
             render(){
                 return (
                     <div>我是{this.props.name}
-                        <h4>react 组件名 首字母大写</h4>
+                        <h4>HelloWorld</h4>
                     </div>
                 )
             }
         });
 
         ReactDOM.render(
-                <MyComponent name="ABC"/>,
+                <MyComponent name="老徐"/>,
                 document.getElementById("root")
         )
     </script>
@@ -399,7 +410,7 @@ helloworld.html
 >
 > Render
 >
-> * ReactDOM.render 会把React组件的内容输出到对应的 HTML Element 中
+> * ReactDOM.render 会把React组件的内容翻译后输出到对应的 HTML Element 中
 
 注意
 
@@ -410,7 +421,7 @@ helloworld.html
 
 > 组件属性，在组件外赋值，在组件内通过 this.props.xxx 读取的只读属性
 
-组件的用法与原生的 HTML 标签完全一致，可以任意加入属性，比如 `<HelloMessage name="John">` ，就是 `HelloMessage` 组件加入一个 `name` 属性，值为 `John`。组件的属性可以在组件类的 `this.props` 对象上获取，比如 `name` 属性就可以通过 `this.props.name` 读取。
+组件的用法与原生的 HTML 标签完全一致，可以任意加入属性，比如 `<HelloMessage name="John">` ，就是 `HelloMessage` 组件加入一个 `name` 属性，值为 `John`。组件的属性可以在组件类内部的 `this.props` 对象上获取，比如 `name` 属性就可以通过 `this.props.name` 读取。
 
 注意
 
@@ -420,6 +431,14 @@ helloworld.html
 ### this.state
 
 > 组件状态，理解为会变化内容的属性，在组件内通过 this.state.xxx 读取
+
+this.state 和 this.props 类似，只不过它的内容是会变化的内部数据
+
+注意：后面提到的 Rudux/Mobx 等架构中状态将会进行集中管理，而不是放在组件中。
+
+### LikeButton
+
+> 一个 this.state 的例子
 
 React Component 有好几种写法，建议使用 extends Component 方式
 
@@ -471,15 +490,13 @@ React Component 有好几种写法，建议使用 extends Component 方式
 >
 > * 只要修改了状态（这里的 this.setState）值，那么界面会随之刷新
 > * React 会计算DOM的变化（Diff算法），然后高效地更新在浏览器中显示的DOM。
-> * 这允许程序员编写代码时的每一次修改，整个页面好像都会重新渲染，而实际上React库只渲染实际改变的子组件。
+> * 看起来好像每一次数据修改整个页面都会重新渲染，而实际上React库只渲染实际改变的子组件。
 
 ## 状态管理
 
-> 你需要一种机制，可以在同一个地方查询状态、改变状态、传播状态的变化。
+> 你需要一种机制，可以在同一个地方集中进行查询状态、改变状态、传播状态的变化。
 
-&emsp;&emsp;简单说，状态管理是一种架构思想，用于将业务逻辑从用户界面中分离出来，专门解决软件的结构问题。它跟MVC 架构是同一类东西，但是更加简单和清晰。
-
-&emsp;&emsp;2014年 Facebook 提出了 Flux 架构的概念，2015年 Redux 出现，Redux 是由 Flux 演变而来，将 Flux 与函数式编程结合一起。之后又出现了Mobx用来取代 Flux，不过目前多数人使用的是 `Redux`。
+简单说，状态管理是一种架构思想，用于将业务逻辑从用户界面中分离出来，专门解决软件的结构问题。它跟MVC 架构是同一类东西，但是更加简单和清晰。2014年 Facebook 提出了 Flux 架构的概念，2015年 Redux 出现，Redux 是由 Flux 演变而来，将 Flux 与函数式编程结合一起。之后又出现了Mobx用来取代 Flux，不过目前多数人使用的是 `Redux`。
 
 > 首先明确一点，Redux 是一个有用的架构，但不是非用不可。
 >
@@ -488,6 +505,12 @@ React Component 有好几种写法，建议使用 extends Component 方式
 > 另一方面，Redux 只是 Web 架构的一种解决方案，也可以选择其他方案。
 
 ### Redux
+
+> Redux 是 JavaScript 状态容器，提供可预测化的状态管理
+>
+> https://redux.js.org/
+>
+> [Redux 中文文档](http://www.redux.org.cn)
 
 **基本概念**
 
@@ -499,8 +522,8 @@ React Component 有好几种写法，建议使用 extends Component 方式
 **工作流程**
 
 * 首先，用户发出 Action
-* 然后，Store 自动调用 Reducer，并且传入两个参数：当前 State 和 Action。 Reducer 会返回新的 State 。
-* 如果 State 有变化，Store 就会调用监听函数，这个监听函数一般是 `ReactDOM.render`
+* 然后，Store 自动调用 Reducer，并且传入两个参数：当前 State 和 Action。然后 Reducer 会返回新的 State 。
+* 如果 State 有变化，Store 就会调用监听函数，这个监听函数一般是 `ReactDOM.render`来刷新界面
 
 > 具体内容见后面的 `实验`
 
@@ -518,14 +541,14 @@ React Component 有好几种写法，建议使用 extends Component 方式
 
 React-Redux 将所有组件分成两大类：
 
-- UI 组件（Presentational Component）：负责 UI 的呈现
+- UI 组件（Presentational Component）：负责 UI 的呈现。
 - 容器组件（Container Component）：负责管理数据和逻辑。
 
 > React-Redux 规定，所有的 UI 组件都由用户提供，容器组件则是由 React-Redux 自动生成。也就是说，用户负责视觉层，状态管理则是全部交给它。
 
 **API**
 
-- `connect`，用于为 UI 组件生成相应的容器组件。
+- `connec()`，用于为 UI 组件生成相应的容器组件。
 - `mapStateToProps()`
   - `connect` 的第一个参数，可选
   - 建立一个从（外部的）`state`对象到（UI 组件的）`props`对象的映射关系。
@@ -570,8 +593,8 @@ React-Redux 将所有组件分成两大类：
 
 > 完整的 React-Redux 异步操作获取数据刷新页面：
 >
-> * 异步刷新获取 reddit 的数据并显示
-> * https://www.reddit.com/r/reactjs.json
+> * 异步刷新获取 reddit 的 JSON 格式数据并显示
+> * 数据来源 https://www.reddit.com/r/reactjs.json
 
 ### 项目环境
 
@@ -586,17 +609,17 @@ $ yarn install
 删除 src 目录下的所有文件
 
 ```bash
-$ rm -rf src
+$ rm -rf src/*
 ```
 
-加入 redux 和相关依赖
+加入 redux 等相关依赖包
 
 ```bash
 $ yarn add redux react-redux redux-thunk
 $ yarn add --dev redux-logger
 ```
 
-> redux-logger 用于打印日志
+> redux-logger 用于开发环境下打印日志
 
 最终的目录结构
 
@@ -657,7 +680,7 @@ render(
 >
 > 最外层引入了 react-redux 自带的容器组件 `Provider`，用于给子组件提供 store 或 state
 >
->  `Provider`的子组件是我们程序的组件`App`
+>  `Provider`的子组件是我们程序的顶层组件`App`
 
 ###组件`App`
 
@@ -743,6 +766,8 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(App)
 ```
 
+下面分块进行代码详细说明：
+
 **组件属性 props**
 
 ```jsx
@@ -772,7 +797,7 @@ export default connect(mapStateToProps)(App)
 >
 > 从属性中获取两个参数 dispatch, selectedSubreddit
 >
-> * dispatch：即 store.dispatch() 函数
+> * dispatch：即 store.dispatch() 函数，用来发出 Action
 > * selectedSubreddit：当前选中的reddit频道名称
 >
 > 然后发出 Action
@@ -836,9 +861,9 @@ export default connect(mapStateToProps)(App)
 >
 > * 属性的数据来源是后面的 mapStateToProps 映射的结果
 >
-> 就是一个正常普通React组件的渲染代码
+> 然后就是一个正常普通React组件的渲染代码
 >
-> 包括一个子组件 Posts
+> 包含了一个子组件 Posts
 
 **mapStateToProps()**
 
@@ -976,6 +1001,8 @@ export const fetchPostsIfNeeded = subreddit => (dispatch, getState) => {
 > * RECEIVE_POSTS    收到请求的数据
 > * SELECT_SUBREDDIT        
 > * INVALIDATE_SUBREDDIT 使数据无效
+
+下面分块进行代码详细说明：
 
 首先是前面 App.js 中的初始化和刷新按钮事件调用的 fetchPostsIfNeeded 这个Action
 
